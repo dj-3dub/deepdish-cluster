@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-smoke
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: nginx-smoke }
+  template:
+    metadata:
+      labels: { app: nginx-smoke }
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:stable
+          ports:
+            - containerPort: 80

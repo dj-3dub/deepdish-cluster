@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-smoke
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+    - host: web.pizza
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-smoke
+                port:
+                  number: 80
