@@ -1,0 +1,8 @@
+nodes:
+  master: { hostname: k3s-master, ip: 192.168.2.71 }
+  workers:
+    - { hostname: k3s-node1, ip: 192.168.2.72 }
+    - { hostname: k3s-node2, ip: 192.168.2.73 }
+dns:
+  pihole: 192.168.2.51
+  wildcard_vip: 192.168.2.70

@@ -1,0 +1,20 @@
+# editors / OS cruft
+.DS_Store
+*.swp
+*.swo
+
+# logs & artifacts
+*.log
+*.out
+
+# keep only our diagram images in docs/
+*.png
+*.svg
+!docs/architecture.png
+!docs/architecture.svg
+
+# secrets / kube configs
+*.secret
+*.token
+*.env
+.kube/

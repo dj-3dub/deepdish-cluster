@@ -1,0 +1,39 @@
+digraph G {
+  rankdir=LR;
+  node  [shape=box, style="rounded,filled", color="#263238", fillcolor="#F5F7FA"];
+  edge  [color="#607D8B", arrowsize=0.7];
+
+  subgraph cluster_lan {
+    label="Home LAN 192.168.2.0/24";
+    color="#CFD8DC";
+
+    pihole [label="Pi-hole DNS\n192.168.2.51\nWildcard: *.pizza → 192.168.2.70", fillcolor="#FFF8E1"];
+
+    subgraph cluster_k3s {
+      label="K3s Cluster"; color="#B0BEC5";
+
+      master [label="k3s-master\n192.168.2.71\nControl Plane", fillcolor="#E3F2FD"];
+      node1  [label="k3s-node1\n192.168.2.72\nWorker", fillcolor="#E8F5E9"];
+      node2  [label="k3s-node2\n192.168.2.73\nWorker", fillcolor="#E8F5E9"];
+
+      vip [label="MetalLB VIP\n192.168.2.70", fillcolor="#FFEBEE"];
+      traefik [label="Traefik Ingress", fillcolor="#F3E5F5"];
+      certmgr [label="cert-manager", fillcolor="#F3E5F5"];
+
+      pizza  [label="pizza-api App", fillcolor="#FFFDE7"];
+      nginx  [label="nginx smoke test", fillcolor="#FFFDE7"];
+
+      vip -> traefik;
+      traefik -> pizza   [label="pizza-api.pizza"];
+      traefik -> nginx   [label="web.pizza"];
+      certmgr -> traefik [style=dotted, label="TLS"];
+
+      master -> node1 [dir=both, style=dotted];
+      master -> node2 [dir=both, style=dotted];
+    }
+  }
+
+  user [label="Client", shape=oval, fillcolor="#FFFFFF"];
+  user -> pihole [label="DNS: *.pizza"];
+  user -> vip    [label="HTTP(S)"];
+}
