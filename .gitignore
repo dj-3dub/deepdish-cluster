@@ -1,8 +1,25 @@
 # Terraform
-**/.terraform/*
+.terraform/
+.terraform.tfstate.lock.info
 *.tfstate
 *.tfstate.*
 crash.log
-*.lock.hcl
-# Local files
-infra/envs/homelab/caddy/Caddyfile
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Kubeconfig & local artifacts
+kubeconfig
+*.kubeconfig
+**/kubeconfig
+**/*.kubeconfig
+
+# Diagram build outputs
+docs/architecture.png
+docs/architecture.svg
+
+# Editor/OS
+.DS_Store
+*.swp

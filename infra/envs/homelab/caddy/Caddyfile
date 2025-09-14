@@ -1,0 +1,14 @@
+# Oven landing
+{{.oven_host}} {
+  respond "🍕 Oven is hot! (Caddy running)" 200
+}
+
+# API
+{{.api_host}} {
+  reverse_proxy pizza-api:80
+}
+
+# Status
+{{.status_host}} {
+  reverse_proxy uptime-kuma:3001
+}
