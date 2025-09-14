@@ -1,0 +1,21 @@
+digraph PizzaStack {
+  rankdir=LR;
+  node [shape=box, style=rounded];
+
+  Users [shape=oval, label="Users"];
+  Caddy [label="Caddy Reverse Proxy\n(oven.pizza)"];
+  API [label="pizza-api\n(api.pizza)"];
+  Kuma [label="Uptime-Kuma\n(status.pizza)"];
+  DB [label="PostgreSQL\n(toppings)"];
+
+  subgraph cluster_net {
+    label="docker network: pizza_net";
+    style=dashed;
+    Caddy; API; Kuma; DB;
+  }
+
+  Users -> Caddy [label="HTTP(S)"];
+  Caddy -> API [label="reverse_proxy"];
+  Caddy -> Kuma [label="reverse_proxy"];
+  API -> DB [label="5432"];
+}

@@ -1,0 +1,21 @@
+# A records -> Debian VM 192.168.2.71
+resource "pihole_dns_record" "oven" {
+  domain = "oven.${var.pizza_domain}"
+  ip     = var.vm_host_ip
+}
+
+resource "pihole_dns_record" "api" {
+  domain = "api.${var.pizza_domain}"
+  ip     = var.vm_host_ip
+}
+
+resource "pihole_dns_record" "status" {
+  domain = "status.${var.pizza_domain}"
+  ip     = var.vm_host_ip
+}
+
+# Optional CNAME (if provider version supports it). Otherwise, create another A record.
+# resource "pihole_cname_record" "menu_alias" {
+#   domain = "menu.${var.pizza_domain}"
+#   target = "status.${var.pizza_domain}"
+# }

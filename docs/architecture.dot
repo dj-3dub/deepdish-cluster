@@ -1,0 +1,42 @@
+// docs/architecture.dot
+digraph PizzaIaC {
+  rankdir=LR;
+  fontname="Helvetica";
+  node [shape=box, style=rounded, fontname="Helvetica"];
+  edge [fontname="Helvetica"];
+
+  // External
+  Users [shape=oval, label="Users / Browser"];
+
+  // Local DNS
+  PiHole [label="Pi-hole Local DNS\nA-records:\n- oven.pizza → 192.168.2.71\n- api.pizza → 192.168.2.71\n- status.pizza → 192.168.2.71"];
+
+  // Host
+  Host [label="Debian Host\n192.168.2.71"];
+
+  // Docker network / services
+  subgraph cluster_pizza_net {
+    label="docker network: pizza_net";
+    style=dashed;
+
+    Caddy [label="Caddy Reverse Proxy\n(oven.pizza)\nPorts: 80/443"];
+    API   [label="pizza-api\n(api.pizza)"];
+    Kuma  [label="Uptime-Kuma\n(status.pizza)"];
+    DB    [label="PostgreSQL\n(toppings)\nPort: 5432"];
+  }
+
+  // Flows
+  Users -> PiHole [label="DNS queries"];
+  PiHole -> Users [label="A records"];
+
+  Users -> Caddy  [label="HTTP/HTTPS"];
+  Caddy -> API    [label="reverse_proxy"];
+  Caddy -> Kuma   [label="reverse_proxy"];
+  API   -> DB     [label="5432/TCP"];
+
+  // Placement
+  Host -> Caddy [style=dotted, label="Docker"];
+  Host -> API   [style=dotted];
+  Host -> Kuma  [style=dotted];
+  Host -> DB    [style=dotted];
+}
