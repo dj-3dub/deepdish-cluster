@@ -8,56 +8,44 @@ K3s ships with **Traefik** as the ingress controller. **MetalLB** will be added 
 
 ## 🧩 Components
 
-- **Oven** → [Caddy](https://caddyserver.com/) reverse proxy → `oven.pizza`
-- **API** → sample service → `api.pizza`
-- **Status** → [Uptime-Kuma](https://github.com/louislam/uptime-kuma) → `status.pizza`
-- **DB** → PostgreSQL (codename: `toppings`)
+- **K3s Control Plane** — lightweight Kubernetes distribution
+- **Traefik** — ingress controller bundled with K3s
+- **Terraform** — declarative provisioning and configuration
+- **Makefile** — simple workflow (`make preflight`, `make tf-apply`, `make tf-destroy`)
+- **Graphviz** — architecture diagrams
 
 ---
 
-## 🚀 Quickstart
+## 🚀 Quick Start
 
-1. In **Pi-hole Local DNS**, add A-records:
-   - `oven.pizza` → `192.168.2.71`
-   - `api.pizza` → `192.168.2.71`
-   - `status.pizza` → `192.168.2.71`
+1. Run **preflight checks** (SSH, sudo, disk space, port 6443, etc.):
 
-2. Ensure Docker is installed and your user is in the `docker` group.
-
-3. Provision with Terraform:
    ```bash
-   make init
-   make apply
-Visit:
-
-http://oven.pizza
-
-http://api.pizza
-
-http://status.pizza
-
-⚠️ Ports & Conflicts
-This stack binds 80/443 for Caddy.
-If another proxy (e.g., Traefik) is already listening, either:
-
-Change caddy_http_port / caddy_https_port in infra/envs/homelab/variables.tf, or
-
-Remove the Caddy container and route api.pizza + status.pizza through your existing proxy.
-
-Check usage:
+   make preflight
+Provision the K3s control plane and fetch kubeconfig:
 
 bash
 Copy code
-sudo ss -tulpn | grep -E ':(80|443)\b' || true
-docker ps --format 'table {{.Names}}\t{{.Ports}}'
+make tf-apply
+Verify the cluster:
 
-## Architecture
+bash
+Copy code
+KUBECONFIG=infra/terraform/homelab/kubeconfig kubectl get nodes -o wide
+kubectl get pods -A
+Tear it down when finished:
+
+bash
+Copy code
+make tf-destroy
+## 🏗️ Architecture
 
 ![Architecture](docs/architecture.svg)
 
-Render the diagram (requires [Graphviz](https://graphviz.org/)):
+Render the diagram (requires Graphviz):
 
-```bash
+bash
+Copy code
 make diagram
 Outputs:
 
@@ -65,28 +53,15 @@ docs/architecture.svg (ideal for GitHub README)
 
 docs/architecture.png (handy for docs/slides)
 
-
-🧹 Teardown
-bash
-Copy code
-make destroy
 📌 Why it matters
 This project demonstrates:
 
-Infrastructure as Code with Terraform (no manual docker run)
+Infrastructure as Code with Terraform (reproducible K3s cluster provisioning)
 
-Reverse proxy + service composition with Docker
+Ingress management with Traefik (bundled in K3s)
 
-Monitoring integration using Uptime-Kuma
+Automation-first workflow with Make targets (preflight, apply, destroy, diagram)
 
-Local DNS integration with Pi-hole
+Clean documentation with Graphviz architecture diagrams
 
-Clean developer workflow via make targets:
-
-make init → initialize Terraform
-
-make apply → bring up the stack
-
-make diagram → regenerate architecture diagrams
-
-make destroy → tear everything down
+A foundation for adding MetalLB and cert-manager in future revisions
