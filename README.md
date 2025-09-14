@@ -1,7 +1,8 @@
-# 🍕 Pizza IaC (Terraform + Docker on Debian)
+# 🍕 DeepDish Cluster (Debian 13)
 
-Pizza-themed homelab stack managed end-to-end with **Terraform** (no cloud provider required).  
-This project provisions a Docker network on a Debian VM with a reverse proxy, API service, uptime dashboard, and PostgreSQL database — all wrapped in Terraform for reproducibility.
+A Chicago-style, pizza-themed **K3s** cluster on **Debian 13** — using Terraform to provision, configure, and pull back a ready-to-use `kubeconfig`.  
+K3s ships with **Traefik** as the ingress controller. **MetalLB** will be added in a future revision (not included yet).  
+(Optional next step: add **cert-manager** for automated TLS.)
 
 ---
 
