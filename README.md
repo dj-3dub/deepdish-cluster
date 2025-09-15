@@ -8,11 +8,11 @@ K3s ships with **Traefik** as the ingress controller. **MetalLB** will be added 
 
 ## 🧩 Components
 
-- **K3s Control Plane** — lightweight Kubernetes distribution
-- **Traefik** — ingress controller bundled with K3s
-- **Terraform** — declarative provisioning and configuration
-- **Makefile** — simple workflow (`make preflight`, `make tf-apply`, `make tf-destroy`)
-- **Graphviz** — architecture diagrams
+- **K3s Control Plane** — lightweight Kubernetes distribution  
+- **Traefik** — ingress controller bundled with K3s  
+- **Terraform** — declarative provisioning and configuration  
+- **Makefile** — simple workflow (`preflight`, `tf-apply`, `tf-destroy`)  
+- **Graphviz** — architecture diagrams  
 
 ---
 
@@ -22,46 +22,58 @@ K3s ships with **Traefik** as the ingress controller. **MetalLB** will be added 
 
    ```bash
    make preflight
-Provision the K3s control plane and fetch kubeconfig:
+   ```
 
-bash
-Copy code
-make tf-apply
-Verify the cluster:
+2. Provision the K3s control plane and fetch kubeconfig:
 
-bash
-Copy code
-KUBECONFIG=infra/terraform/homelab/kubeconfig kubectl get nodes -o wide
-kubectl get pods -A
-Tear it down when finished:
+   ```bash
+   make tf-apply
+   ```
 
-bash
-Copy code
-make tf-destroy
+3. Verify the cluster:
+
+   ```bash
+   KUBECONFIG=infra/terraform/homelab/kubeconfig kubectl get nodes -o wide
+   kubectl get pods -A
+   ```
+
+---
+
 ## 🏗️ Architecture
 
 ![Architecture](docs/architecture.svg)
 
-Render the diagram (requires Graphviz):
+Render the diagram (requires [Graphviz](https://graphviz.org/)):
 
-bash
-Copy code
+```bash
 make diagram
+```
+
 Outputs:
+- `docs/architecture.svg` (ideal for GitHub README)  
+- `docs/architecture.png` (handy for docs/slides)  
 
-docs/architecture.svg (ideal for GitHub README)
+---
 
-docs/architecture.png (handy for docs/slides)
+## 🧹 Teardown
 
-📌 Why it matters
+Cleanly destroy the cluster when you’re finished:
+
+```bash
+make tf-destroy
+```
+
+---
+
+## 📌 Why it matters
+
 This project demonstrates:
 
-Infrastructure as Code with Terraform (reproducible K3s cluster provisioning)
+- **Infrastructure as Code** with Terraform (reproducible K3s cluster provisioning)  
+- **Ingress management** with Traefik (bundled in K3s)  
+- **Automation-first workflow** with Make targets (`preflight`, `apply`, `destroy`, `diagram`)  
+- **Clean documentation** with Graphviz architecture diagrams  
+- A foundation for adding **MetalLB** and **cert-manager** in future revisions  
 
-Ingress management with Traefik (bundled in K3s)
+---
 
-Automation-first workflow with Make targets (preflight, apply, destroy, diagram)
-
-Clean documentation with Graphviz architecture diagrams
-
-A foundation for adding MetalLB and cert-manager in future revisions
